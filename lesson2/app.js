@@ -12,7 +12,7 @@ const PORT = 3000, URL = "127.0.0.1";
 
 app.set("view engine", "hbs");
 
-
+app.set("views",  __dirname + "/views")
 
 app.use(express.static(__dirname + "/static"));
 
