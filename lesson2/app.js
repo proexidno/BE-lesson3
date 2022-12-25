@@ -1,6 +1,17 @@
-const express = require("express"), app = express();
+const express = require("express"), app = express(), path = require("path");
+
+const BlogRouter = require("./routes/blog-router");
+const ContactRouter = require("./routes/contact-router");
+const AboutRouter = require("./routes/about-router");
+const GalleryRouter = require("./routes/gallery-router");
+const TestRouter = require("./routes/test-router")
+const SquareRouter = require("./routes/square-router")
 
 const PORT = 3000, URL = "127.0.0.1";
+
+
+app.set("view engine", "hbs");
+
 
 
 app.use(express.static(__dirname + "/static"));
@@ -9,29 +20,17 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/public/mainPage.html");
 });
 
-app.use((req, res, next) => {
-    var pages = ["/about", "/gallery", "/contact", "/square"];
-    var link = req.path;
-    if (pages.includes(link)) {
-        res.sendFile(`${__dirname}/public${link + "Page"}.html`);
-    } else {
-        next();
-    }
-});
+app.use("/blog", BlogRouter);
 
-app.get("/test/:id", (req,  res) => {
-    var id = req.params.id
-    res.send(id)
-})
+app.use("/about", AboutRouter);
 
-app.get("/square/:handler", (req,  res) => {
-    var handler = req.params.handler
-    if (isNaN(handler))  {
-        res.send(handler + handler)
-    }  else {
-        res.send(String(Number(handler) * Number(handler)));
-    }
-})
+app.use("/contact", ContactRouter);
+
+app.use("/gallery", GalleryRouter);
+
+app.use("/test", TestRouter)
+
+app.use("/square", SquareRouter)
 
 app.use((req, res, next) => {
     res.status(404).send("А, что?");
