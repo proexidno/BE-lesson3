@@ -7,7 +7,7 @@ const GalleryRouter = require("./routes/gallery-router");
 const TestRouter = require("./routes/test-router");
 const SquareRouter = require("./routes/square-router");
 const ApiRouter = require("./routes/api");
-const RondomGiftRouter = require("./routes/rGift-router");
+const RandomGiftRouter = require("./routes/rGift-router");
 
 const PORT = 3000, URL = "127.0.0.1";
 
@@ -33,7 +33,7 @@ app.use("/api", ApiRouter);
 
 app.use("/blog", BlogRouter);
 
-app.use("/randomgift", RondomGiftRouter)
+app.use("/randomgift", RandomGiftRouter)
 
 app.use("/about", AboutRouter);
 
@@ -46,7 +46,7 @@ app.use("/test", TestRouter);
 app.use("/square", SquareRouter);
 
 app.use((req, res, next) => {
-    res.status(404).send("А, что?");
+    res.status(404).send("Page is not defined");
 });
 
 
