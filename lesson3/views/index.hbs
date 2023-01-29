@@ -13,12 +13,12 @@
 </form>
 </div>
 <h1>№7</h1>
-<form action="/daysTillBirthday" method="get">
+<form action="/daysTillBirthday" method="post">
     <input type="text" name="date">
     <button>Send</button>
 </form>
 <h1>№10</h1>
-<form action="/dayOfTheWeek">
+<form action="/dayOfTheWeek" method="post">
     <select name="Day">
         <option value="1" selected>1</option>
         <option value="2">2</option>
@@ -104,5 +104,40 @@
         <option value="34">2024</option>
         <option value="35">2025</option>
     </select>  
+    <button>Send</button>
+</form>
+<h1>№6</h1>
+<form action="/isPifTriangle" method="post">
+    <input type="text" name="side1">
+    <input type="text" name="side2">
+    <input type="text" name="side3">
+    <button>Send</button>
+</form>
+<h1>№5</h1>
+<form action="/isSquareEquation" method="post">
+    <input type="text" name="coeff1">
+    <input type="text" name="coeff2">
+    <input type="text" name="coeff3">
+    <button>Send</button>
+</form>
+<h1>№4</h1>
+<form action="/commonDenominators" method="post">
+    <input type="text" name="num1">
+    <input type="text" name="num2">
+    <button>Send</button>
+</form>
+<h1>№3</h1>
+<form action="/denominators" method="post">
+    <input type="text" name="num">
+    <button>Send</button>
+</form>
+<h1>№8</h1>
+<form action="/totalWords" method="post">
+    <textarea name="text" cols="30" rows="10"></textarea>
+    <button>Send</button>
+</form>
+<h1>№9</h1>
+<form action="/totalSymbols" method="post">
+    <textarea name="text" cols="30" rows="10"></textarea>
     <button>Send</button>
 </form>
