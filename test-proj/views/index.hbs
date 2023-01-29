@@ -1,0 +1,11 @@
+<div class="container">
+    <div class="container-fluid row">
+        {{#each variants}}
+        <div class="col rounded-4 bg-white m-3 border border-dark-subtle">
+            <h1 class="m-4">{{{title}}}</h1>
+            <p class="m-2">{{{decription}}}</p>
+            <a href="/test/{{{id}}}" class="btn bg-primary float-end m-2">Go try</a>
+        </div>
+        {{/each}}
+    </div>
+</div>

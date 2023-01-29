@@ -1,0 +1,27 @@
+<form class="container-fluid test row justify-content-center" action="/results" method="post">
+    <div class="col-8 my-5 rounded-4 bg-white border border-dark-subtle p-4">
+        <h1 class="fs-1 m-2">{{{title}}}</h1>
+        <p class="m-1">{{{detailedDesc}}}</p>
+        <button class="btn bg-primary float-end m-2">Send</button>
+    </div>
+    {{#each questions as |question questionID|}}
+    <div class="col-8 mb-5 rounded-4 bg-white border border-dark-subtle p-4">
+        <h3>{{question.question}}</h3>
+        {{#if question.type.oneOf }}
+        {{#each question.options as |option optionID|}}
+        <br>
+        <input type="radio" name="oneOf_{{questionID}}" id="{{optionID}}"> {{this}}
+        {{/each}}
+        {{/if}}
+        {{#if type.multipleOf }}    
+        {{#each question.options as |option optionID|}}
+        <br>
+        <input type="checkbox" name="multipleOf_{{questionID}}" id="{{optionID}}"> {{option}}
+        {{/each}}
+        {{/if}}
+        {{#if type.textQuest }}
+        <textarea name="textQuest_{{questionID}}" cols="30" rows="10" class="border border-2"></textarea>
+        {{/if}}
+    </div>
+    {{/each}}
+</form>
