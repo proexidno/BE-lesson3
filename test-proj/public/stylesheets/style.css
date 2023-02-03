@@ -6,3 +6,55 @@
 * {
   font-family: "Mont";
 }
+
+.percentShower {
+  height: 100%;
+  position: relative;
+  transition: all 5s;
+}
+
+.percentShower>div {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 50%;
+}
+
+.percentShower>div.bg-primary {
+  top: 50%;
+  border-radius: 0 0 100px 100px;
+}
+
+.percents {
+  width: 200px;
+  height: 200px;
+}
+
+.overlayC {
+  z-index: 100;
+  background: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 66.66px;
+  height: 66.66px;
+  border-radius: 100%;
+}
+
+.overlayC>div {
+  color: black;
+  height: 100%;
+  line-height: 40px;
+  text-align: center;
+}
+
+.overlayS {
+  z-index: 99;
+  position: absolute;
+  width: 202px;
+  height: 51%;
+  bottom: -1px;
+  left: -1px;
+  background-color: white;
+}

@@ -140,7 +140,7 @@ router.get("/test/:id", (req, res) => {
 
 router.get("/result/:id", (req, res) => {
   const resultId = req.params.id
-  res.render("result", { docTitle: "Your Results" })
+  res.render("result", { docTitle: "Your Results", title: `Test ${resultId}`})
 })
 
 router.post("/api/resultChecker", (req, res) => {
