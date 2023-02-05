@@ -3,18 +3,20 @@ var router = express.Router();
 
 
 function questionsShaffle(question) {
+  let newTypes = Object.assign({}, types)
+  newTypes[question.type] = 1
   let { type } = question
   if (type.textQuest) {
     return {
       ID: question.ID,
-      type: question.type,
+      type: newTypes,
       question: question.question
     }
   }
   let { options } = question
   // options.sort(() => Math.random() - 0.5);
   return {
-    type: question.type,
+    type: newTypes,
     question: question.question,
     options: options
   }
@@ -27,7 +29,7 @@ const tests = [
     detailedDesc: "Mollit minim nisi sint deserunt elit sunt amet eu culpa. Laboris aliquip amet commodo ex laborum enim eu duis fugiat culpa nulla consequat qui labore. Et ea incididunt magna enim aute aute dolore adipisicing veniam. Ad sunt qui culpa eu reprehenderit. <br><br> Elit dolore ea quis ea proident quis ad dolor. Reprehenderit anim velit sit mollit cupidatat ipsum ullamco mollit eu eiusmod sunt. Officia ea cupidatat officia voluptate eu ullamco ex do ad aliquip Lorem nisi mollit magna. Anim labore commodo exercitation velit quis. Nisi cillum adipisicing esse tempor cupidatat do nostrud veniam duis exercitation. Voluptate cillum elit incididunt cupidatat anim aute ad dolore ut. Laborum eiusmod cillum laboris sit aute elit Lorem est deserunt pariatur aute non exercitation.",
     questions: [
       {
-        type: { oneOf: 1, multipleOf: 0, textQuest: 0 },
+        type: "oneOf",
         question: "Ut officia officia et magna.",
         options: [
           "1",
@@ -38,7 +40,7 @@ const tests = [
         answer: "1"
       },
       {
-        type: { oneOf: 0, multipleOf: 1, textQuest: 0 },
+        type: "multipleOf",
         question: "Ut officia officia et magna.",
         options: [
           "1",
@@ -56,7 +58,44 @@ const tests = [
         }
       },
       {
-        type: { oneOf: 0, multipleOf: 0, textQuest: 1 },
+        type: "textQuest",
+        question: "Commodo excepteur do mollit culpa mollit. Sunt reprehenderit occaecat excepteur id consequat aute pariatur do duis.",
+        answer: "admin",
+        answerMarkingSystem: (text, rightText) => {
+          return text === rightText ? 5 : 0
+        }
+      },
+      {
+        type: "oneOf",
+        question: "Ut officia officia et magna.",
+        options: [
+          "1",
+          "12",
+          "123",
+          "1234"
+        ],
+        answer: "1"
+      },
+      {
+        type: "multipleOf",
+        question: "Ut officia officia et magna.",
+        options: [
+          "1",
+          "12",
+          "123",
+          "1234",
+          "12345",
+          "123456"
+        ],
+        answer: ["1", "123", "12345", "123456"],
+        answerMarkingSystem: (right, maxRightAnswers) => {
+          let maxMarks = 3
+          let pardonCoefficient = 1
+          return Math.ceil((maxRightAnswers - right) / pardonCoefficient) < maxMarks ? maxMarks - Math.ceil((maxRightAnswers - right) / pardonCoefficient) : 0
+        }
+      },
+      {
+        type: "textQuest",
         question: "Commodo excepteur do mollit culpa mollit. Sunt reprehenderit occaecat excepteur id consequat aute pariatur do duis.",
         answer: "admin",
         answerMarkingSystem: (text, rightText) => {
@@ -64,7 +103,7 @@ const tests = [
         }
       }
     ],
-    maxMark: 9
+    maxMark: 18
   },
   {
     title: "12345",
@@ -73,7 +112,7 @@ const tests = [
     questions: [
       {
         id: 1,
-        type: { oneOf: 1, multipleOf: 0, textQuest: 0 },
+        type: "oneOf",
         question: "Ut officia officia et magna.",
         options: [
           "0",
@@ -85,7 +124,7 @@ const tests = [
       },
       {
         id: 2,
-        type: { oneOf: 0, multipleOf: 1, textQuest: 0 },
+        type: "multipleOf",
         question: "Ut officia officia et magna.",
         options: [
           "01",
@@ -99,7 +138,7 @@ const tests = [
       },
       {
         id: 3,
-        type: { oneOf: 0, multipleOf: 0, textQuest: 1 },
+        type: "textQuest",
         question: "Commodo excepteur do mollit culpa mollit. Sunt reprehenderit occaecat excepteur id consequat aute pariatur do duis.",
         answer: "admin2"
       }
@@ -107,6 +146,8 @@ const tests = [
     maxMark: 9
   }
 ]
+
+const types = { oneOf: 0, multipleOf: 0, textQuest: 0 }
 
 const multipleOfComparingFunction = (right, maxRightAnswers) => {
   let max
@@ -151,21 +192,26 @@ router.post("/api/resultChecker", (req, res) => {
     if (!usersAnswers[String(i)] && !usersAnswers[`${i}[]`]) {
       continue
     }
-    if (test.questions[i].type.multipleOf) {
+    console.log(test.questions[i].type);
+    if (test.questions[i].type == "multipleOf") {
+      console.log(1);
       if (!test.questions[i].answerMarkingSystem) {
         finalMark += tests[0].questions[1].answerMarkingSystem(usersAnswers[`${i}[]`].filter(element => test.questions[i].answer.includes(test.questions[i].options[Number(element)])).length, test.questions[i].answer.length)
         continue
       }
       finalMark += test.questions[i].answerMarkingSystem(usersAnswers[`${i}[]`].filter(element => test.questions[i].answer.includes(test.questions[i].options[Number(element)])).length, test.questions[i].answer.length)
-    } else if (test.questions[i].type.textQuest) {
+    } else if (test.questions[i].type == "textQuest") {
+      console.log(2);
       if (!test.questions[i].answerMarkingSystem) {
         finalMark += tests[0].questions[2].answerMarkingSystem(usersAnswers[String(i)], test.questions[i].answer)
       }
       finalMark += test.questions[i].answerMarkingSystem(usersAnswers[String(i)], test.questions[i].answer)
     } else {
+      console.log(3);
       finalMark += test.questions[i].answer === test.questions[i].options[Number(usersAnswers[String(i)])] ? 1 : 0
     }
   }
+  console.log(finalMark);
   res.send(String(Math.round((finalMark * 100)/test.maxMark)))
 })
 module.exports = router;

@@ -18,7 +18,7 @@ $("#Send").click(function () {
     $("textarea").each(function () {
         formData[$(this).attr("name").split("_")[1]] = $(this).val()
     })
-
+    
     $.post("/api/resultChecker", formData, function (data) {
         localStorage.setItem(`Test ${$("title").text().split(" ")[1]} result`, Number(data))
         window.location.href = `/result/${$("title").text().split(" ")[1]}`
@@ -32,7 +32,6 @@ window.onload = function () {
     $("#result").text(localStorage.getItem(`${$("#title").text()} result`))
     setTimeout(() => {
         let percent = localStorage.getItem(`${$("#title").text()} result`), currPercent = 0, degrs = percent * 1.8;
-        localStorage.setItem(`${$("#title").text()} result`, 20);
         $(".percentShower").css("transform", `rotate(${degrs}deg)`)
         let interval = setInterval(() => {
             $(".overlayC>div").text(`${currPercent}%`)
@@ -40,6 +39,6 @@ window.onload = function () {
             if (currPercent > percent) {
                 clearInterval(interval)
             }
-        }, 3000 / percent)
+        }, 3400 / percent)
     }, 1)
 }
