@@ -1,10 +1,18 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-9 rounded-4 bg-white border border-dark-subtle p-3 my-3 d-flex justify-content-evenly">
-            <h2 class="m-2 mt-5 pt-3">Ваш результат в <span id="title">{{{title}}}</span> - <span id="result"></span>%</h2>
+            <div class="m-2">
+                <h1>Congratulation!</h1>
+                <h2 class="pt-2">Your result in <span id="title">{{{title}}}</span> is <span id="result">{{result}}</span>%</h2>
+            </div>
             <div class="percents position-relative">
-                <div class="percentShower"><div class="bg-primary"></div><div></div></div>
-                <div class="overlayC"><div>0%</div></div>
+                <div class="percentShower">
+                    <div class="bg-primary"></div>
+                    <div></div>
+                </div>
+                <div class="overlayC">
+                    <div>0%</div>
+                </div>
                 <div class="overlayS"></div>
             </div>
         </div>

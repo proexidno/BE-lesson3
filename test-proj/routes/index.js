@@ -111,22 +111,21 @@ const tests = [
     detailedDesc: "Laborum commodo sit ullamco labore pariatur nulla officia incididunt enim. Magna quis anim labore aliqua proident deserunt voluptate nulla id laborum. Sit Lorem aliquip veniam ex esse est consequat tempor eiusmod aliquip velit. Irure fugiat laborum ad voluptate. Ad voluptate nulla labore occaecat commodo. <br><br> Nostrud quis Lorem exercitation voluptate exercitation est cillum deserunt ea quis elit. Veniam tempor aute aliqua magna id adipisicing eu. Ipsum non consectetur elit id laborum fugiat velit enim deserunt aliqua adipisicing. Ut ex labore est ad ea. Tempor proident nostrud non eu enim sint ad enim minim irure ipsum esse tempor non. Velit ut irure occaecat non sunt dolore.",
     questions: [
       {
-        id: 1,
         type: "oneOf",
         question: "Ut officia officia et magna.",
         options: [
           "0",
+          "01",
           "02",
-          "023",
-          "0234"
+          "023"
         ],
-        answer: "1"
+        answer: "0"
       },
       {
-        id: 2,
         type: "multipleOf",
         question: "Ut officia officia et magna.",
         options: [
+          "0",
           "01",
           "012",
           "0123",
@@ -137,7 +136,6 @@ const tests = [
         answer: ["01", "01234", "0123456"]
       },
       {
-        id: 3,
         type: "textQuest",
         question: "Commodo excepteur do mollit culpa mollit. Sunt reprehenderit occaecat excepteur id consequat aute pariatur do duis.",
         answer: "admin2"
@@ -148,11 +146,6 @@ const tests = [
 ]
 
 const types = { oneOf: 0, multipleOf: 0, textQuest: 0 }
-
-const multipleOfComparingFunction = (right, maxRightAnswers) => {
-  let max
-  return max - right
-}
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -179,39 +172,40 @@ router.get("/test/:id", (req, res) => {
   })
 })
 
-router.get("/result/:id", (req, res) => {
-  const resultId = req.params.id
-  res.render("result", { docTitle: "Your Results", title: `Test ${resultId}`})
-})
-
-router.post("/api/resultChecker", (req, res) => {
-  let usersAnswers = req.body
+router.post("/result", (req, res) => {
+  const usersAnswers = req.body, regex = new RegExp("oneOf_|textQuest_|multipleOf_", )
+  console.log(usersAnswers);
   const test = tests[usersAnswers.title.split(" ")[1] - 1]
+  let key = {}
+  for (i of Object.keys(usersAnswers)) {
+    key[i.replace(regex, "")] = i
+  }
   let finalMark = 0
   for (i in test.questions) {
-    if (!usersAnswers[String(i)] && !usersAnswers[`${i}[]`]) {
+    if (!key[String(i)]) {
       continue
     }
-    console.log(test.questions[i].type);
+    console.log(key[String(i)]);
+    let usersAnswer = usersAnswers[key[String(i)]]
     if (test.questions[i].type == "multipleOf") {
-      console.log(1);
       if (!test.questions[i].answerMarkingSystem) {
-        finalMark += tests[0].questions[1].answerMarkingSystem(usersAnswers[`${i}[]`].filter(element => test.questions[i].answer.includes(test.questions[i].options[Number(element)])).length, test.questions[i].answer.length)
+        finalMark += tests[0].questions[1].answerMarkingSystem(usersAnswer.filter(element => test.questions[i].answer.includes(test.questions[i].options[Number(element.split("_")[1])])).length, test.questions[i].answer.length)
         continue
       }
-      finalMark += test.questions[i].answerMarkingSystem(usersAnswers[`${i}[]`].filter(element => test.questions[i].answer.includes(test.questions[i].options[Number(element)])).length, test.questions[i].answer.length)
+      finalMark += test.questions[i].answerMarkingSystem(usersAnswer.filter(element => test.questions[i].answer.includes(test.questions[i].options[Number(element.split("_")[1])])).length, test.questions[i].answer.length)
     } else if (test.questions[i].type == "textQuest") {
-      console.log(2);
       if (!test.questions[i].answerMarkingSystem) {
-        finalMark += tests[0].questions[2].answerMarkingSystem(usersAnswers[String(i)], test.questions[i].answer)
+        finalMark += tests[0].questions[2].answerMarkingSystem(usersAnswer, test.questions[i].answer)
+        continue
       }
-      finalMark += test.questions[i].answerMarkingSystem(usersAnswers[String(i)], test.questions[i].answer)
+      finalMark += test.questions[i].answerMarkingSystem(usersAnswer, test.questions[i].answer)
     } else {
-      console.log(3);
-      finalMark += test.questions[i].answer === test.questions[i].options[Number(usersAnswers[String(i)])] ? 1 : 0
+      finalMark += test.questions[i].answer === test.questions[i].options[Number(usersAnswer.split("_")[1])]
     }
   }
-  console.log(finalMark);
-  res.send(String(Math.round((finalMark * 100)/test.maxMark)))
+  const percentResult = Math.round((finalMark * 100) / test.maxMark)
+  res.render("result", { docTitle: "Your Results", title: usersAnswers.title, result: percentResult})
 })
+
+
 module.exports = router;

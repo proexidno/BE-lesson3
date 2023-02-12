@@ -1,6 +1,7 @@
-<div class="container-fluid test row justify-content-center">
+<form class="container-fluid test row justify-content-center" action="/result" method="post">
     <div class="col-8 my-5 rounded-4 bg-white border border-dark-subtle p-4">
         <h1 class="fs-1 m-2">{{{title}}}</h1>
+        <input type="checkbox" name="title" value="{{{docTitle}}}" checked class="d-none">
         <p class="m-1">{{{detailedDesc}}}</p>
         <button class="btn bg-primary float-end m-2" id="Send">Send</button>
     </div>
@@ -10,13 +11,13 @@
         {{#if question.type.oneOf }}
         {{#each question.options as |option optionID|}}
         <br>
-        <input type="radio" name="oneOf_{{questionID}}" id="option_{{optionID}}"> {{this}}
+        <input type="radio" name="oneOf_{{questionID}}" value="option_{{optionID}}"> {{this}}
         {{/each}}
         {{/if}}
         {{#if type.multipleOf }}
         {{#each question.options as |option optionID|}}
         <br>
-        <input type="checkbox" name="multipleOf_{{questionID}}" id="option_{{optionID}}"> {{option}}
+        <input type="checkbox" name="multipleOf_{{questionID}}" value="option_{{optionID}}"> {{this}}
         {{/each}}
         {{/if}}
         {{#if type.textQuest }}
@@ -24,4 +25,4 @@
         {{/if}}
     </div>
     {{/each}}
-</div>
+</form>
