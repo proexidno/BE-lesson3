@@ -185,9 +185,11 @@ router.post("/result", (req, res) => {
     if (!key[String(i)]) {
       continue
     }
-    console.log(key[String(i)]);
     let usersAnswer = usersAnswers[key[String(i)]]
     if (test.questions[i].type == "multipleOf") {
+      if (!(typeof usersAnswer === "object")) {
+        usersAnswer = [usersAnswer]
+      }
       if (!test.questions[i].answerMarkingSystem) {
         finalMark += tests[0].questions[1].answerMarkingSystem(usersAnswer.filter(element => test.questions[i].answer.includes(test.questions[i].options[Number(element.split("_")[1])])).length, test.questions[i].answer.length)
         continue
@@ -206,6 +208,5 @@ router.post("/result", (req, res) => {
   const percentResult = Math.round((finalMark * 100) / test.maxMark)
   res.render("result", { docTitle: "Your Results", title: usersAnswers.title, result: percentResult})
 })
-
 
 module.exports = router;
